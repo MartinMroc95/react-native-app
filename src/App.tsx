@@ -5,11 +5,12 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Provider as PaperProvider, MD3LightTheme as DefaultTheme } from 'react-native-paper'
+import '../firebase'
+
+import RootNavigation from './navigation'
 
 import HomeScreen from './screens/Home'
 import DetailsScreen from './screens/Details'
-
-const Tab = createBottomTabNavigator()
 
 const theme = {
   ...DefaultTheme,
@@ -23,12 +24,7 @@ const theme = {
 const App = () => {
   return (
     <PaperProvider theme={theme}>
-      <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="Details" component={DetailsScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
+      <RootNavigation />
     </PaperProvider>
   )
 }

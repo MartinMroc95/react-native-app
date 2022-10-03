@@ -1,5 +1,6 @@
 import React from 'react'
+import { Button } from 'react-native'
 
 export const Component: React.FC = () => {
-  return <div>Component</div>
+  return <Button title="Button" />
 }
