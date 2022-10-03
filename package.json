@@ -1,7 +1,7 @@
 {
   "name": "react-native-app",
   "version": "1.0.0",
-  "main": "entry.js",
+  "main": "index.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
