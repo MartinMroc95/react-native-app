@@ -1,28 +1,7 @@
 import React from 'react'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button } from 'react-native-elements'
-
-const WelcomeScreen: React.FC<NativeStackScreenProps<any>> = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <Text>Welcome screen!</Text>
-      <View style={styles.buttons}>
-        <Button
-          title="Sign in"
-          buttonStyle={styles.button}
-          onPress={() => navigation.navigate('Sign In')}
-        />
-        <Button
-          title="Sign up"
-          type="outline"
-          buttonStyle={styles.button}
-          onPress={() => navigation.navigate('Sign Up')}
-        />
-      </View>
-    </View>
-  )
-}
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 const styles = StyleSheet.create({
   container: {
@@ -41,5 +20,24 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 })
+
+const WelcomeScreen: React.FC<NativeStackScreenProps<any>> = ({ navigation }) => (
+  <View style={styles.container}>
+    <Text>Welcome screen!</Text>
+    <View style={styles.buttons}>
+      <Button
+        title="Sign in"
+        buttonStyle={styles.button}
+        onPress={() => navigation.navigate('Sign In')}
+      />
+      <Button
+        title="Sign up"
+        type="outline"
+        buttonStyle={styles.button}
+        onPress={() => navigation.navigate('Sign Up')}
+      />
+    </View>
+  </View>
+)
 
 export default WelcomeScreen

@@ -1,16 +1,7 @@
 import * as React from 'react'
-import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Text, View, Button } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { Provider as PaperProvider, MD3LightTheme as DefaultTheme } from 'react-native-paper'
-import '../firebase'
-
+import { MD3LightTheme as DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
 import RootNavigation from './navigation'
-
-import HomeScreen from './screens/Home'
-import DetailsScreen from './screens/Details'
+import '../firebase'
 
 const theme = {
   ...DefaultTheme,
@@ -19,21 +10,10 @@ const theme = {
   },
 }
 
-const App = () => {
-  return (
-    <PaperProvider theme={theme}>
-      <RootNavigation />
-    </PaperProvider>
-  )
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
+const App = () => (
+  <PaperProvider theme={theme}>
+    <RootNavigation />
+  </PaperProvider>
+)
 
 export default App

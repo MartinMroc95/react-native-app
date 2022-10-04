@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAuthentication } from '../utils/hooks/useAuthentication'
-import UserStack from './UserStack'
 import AuthStack from './AuthStack'
+import UserStack from './UserStack'
 
 const RootNavigation = () => {
   const { user } = useAuthentication()

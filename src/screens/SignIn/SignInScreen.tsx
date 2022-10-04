@@ -1,8 +1,31 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { Button, TextInput } from 'react-native-paper'
 import { FirebaseError } from '@firebase/util'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 20,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  controls: {
+    width: 200,
+    height: 60,
+  },
+  control: {
+    marginTop: 10,
+  },
+  error: {
+    marginTop: 10,
+    padding: 10,
+    color: '#fff',
+    backgroundColor: '#D54826FF',
+  },
+})
 
 const auth = getAuth()
 
@@ -59,35 +82,17 @@ const SignInScreen = () => {
           onChangeText={(text) => setValue({ ...value, password: text })}
           secureTextEntry={true}
         />
-        <Button style={styles.control} onPress={signIn}>
+        <Button
+          style={styles.control}
+          onPress={() => {
+            void signIn()
+          }}
+        >
           Sign in
         </Button>
       </View>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 20,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  controls: {
-    width: 200,
-    height: 60,
-  },
-  control: {
-    marginTop: 10,
-  },
-  error: {
-    marginTop: 10,
-    padding: 10,
-    color: '#fff',
-    backgroundColor: '#D54826FF',
-  },
-})
 
 export default SignInScreen
