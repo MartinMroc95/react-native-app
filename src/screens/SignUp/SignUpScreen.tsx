@@ -1,8 +1,9 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword, AuthErrorCodes } from 'firebase/auth'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Button, TextInput } from 'react-native-paper'
+import { FirebaseError } from '@firebase/util'
 
 const auth = getAuth()
 
@@ -13,7 +14,7 @@ const SignUpScreen: React.FC<NativeStackScreenProps<any>> = ({ navigation }) => 
     error: '',
   })
 
-  async function signUp() {
+  const signUp = async () => {
     if (value.email === '' || value.password === '') {
       setValue({
         ...value,
@@ -26,11 +27,13 @@ const SignUpScreen: React.FC<NativeStackScreenProps<any>> = ({ navigation }) => 
       await createUserWithEmailAndPassword(auth, value.email, value.password)
       navigation.navigate('Sign In')
     } catch (error) {
-      const { message } = error as Error
-      setValue({
-        ...value,
-        error: message,
-      })
+      if (error instanceof FirebaseError) {
+        const { message } = error
+        setValue({
+          ...value,
+          error: message,
+        })
+      }
     }
   }
 
@@ -44,12 +47,14 @@ const SignUpScreen: React.FC<NativeStackScreenProps<any>> = ({ navigation }) => 
       )}
       <View style={styles.controls}>
         <TextInput
+          mode="outlined"
           placeholder="Email"
           style={styles.control}
           value={value.email}
           onChangeText={(text) => setValue({ ...value, email: text })}
         />
         <TextInput
+          mode="outlined"
           placeholder="Password"
           style={styles.control}
           value={value.password}
@@ -74,6 +79,8 @@ const styles = StyleSheet.create({
   },
   controls: {
     flex: 1,
+    width: 200,
+    maxHeight: 60,
   },
   control: {
     marginTop: 10,

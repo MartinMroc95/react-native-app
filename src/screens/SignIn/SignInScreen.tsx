@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { Button, TextInput } from 'react-native-paper'
+import { FirebaseError } from '@firebase/util'
 
 const auth = getAuth()
 
@@ -12,7 +13,7 @@ const SignInScreen = () => {
     error: '',
   })
 
-  async function signIn() {
+  const signIn = async () => {
     if (value.email === '' || value.password === '') {
       setValue({
         ...value,
@@ -24,11 +25,13 @@ const SignInScreen = () => {
     try {
       await signInWithEmailAndPassword(auth, value.email, value.password)
     } catch (error) {
-      const { message } = error as Error
-      setValue({
-        ...value,
-        error: message,
-      })
+      if (error instanceof FirebaseError) {
+        const { message } = error
+        setValue({
+          ...value,
+          error: message,
+        })
+      }
     }
   }
 
@@ -42,12 +45,14 @@ const SignInScreen = () => {
       )}
       <View style={styles.controls}>
         <TextInput
+          mode="outlined"
           placeholder="Email"
           style={styles.control}
           value={value.email}
           onChangeText={(text) => setValue({ ...value, email: text })}
         />
         <TextInput
+          mode="outlined"
           placeholder="Password"
           style={styles.control}
           value={value.password}
@@ -71,7 +76,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   controls: {
-    flex: 1,
+    width: 200,
+    height: 60,
   },
   control: {
     marginTop: 10,

@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexWrap: 'wrap',
-    padding: '10px',
+    padding: 10,
     backgroundColor: '#ffffff',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
