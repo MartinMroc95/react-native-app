@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 
 const auth = getAuth()
 
-const SignInScreen = () => {
+const SignInScreen: React.FC = () => {
   const [value, setValue] = React.useState({
     email: '',
     password: '',
