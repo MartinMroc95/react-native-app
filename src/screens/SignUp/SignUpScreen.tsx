@@ -1,94 +1,84 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { Text, View } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
 import { FirebaseError } from '@firebase/util'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AuthErrorCodes, createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
+import { signUpValidationScheme, styles } from './constants'
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 20,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  controls: {
-    flex: 1,
-    width: 200,
-    maxHeight: 60,
-  },
-  control: {
-    marginTop: 10,
-  },
-  error: {
-    marginTop: 10,
-    padding: 10,
-    color: '#fff',
-    backgroundColor: '#D54826FF',
-  },
-})
+type SignUpFormData = {
+  email: string
+  password: string
+}
 
 const auth = getAuth()
 
 const SignUpScreen: React.FC<NativeStackScreenProps<any>> = ({ navigation }) => {
-  const [value, setValue] = React.useState({
-    email: '',
-    password: '',
-    error: '',
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpFormData>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    resolver: yupResolver(signUpValidationScheme),
   })
 
-  const signUp = async () => {
-    if (value.email === '' || value.password === '') {
-      setValue({
-        ...value,
-        error: 'Email and password are mandatory.',
-      })
-      return
-    }
-
+  const onSubmit: SubmitHandler<SignUpFormData> = async ({ email, password }) => {
     try {
-      await createUserWithEmailAndPassword(auth, value.email, value.password)
+      await createUserWithEmailAndPassword(auth, email, password)
       navigation.navigate('Sign In')
     } catch (error) {
       if (error instanceof FirebaseError) {
-        const { message } = error
-        setValue({
-          ...value,
-          error: message,
-        })
+        console.log('error', error.message)
+        throw new Error(error.message)
       }
     }
   }
 
   return (
     <View style={styles.container}>
-      <Text>Sign Up screen!</Text>
-      {!!value.error && (
-        <View style={styles.error}>
-          <Text>{value.error}</Text>
-        </View>
-      )}
-      <View style={styles.controls}>
-        <TextInput
-          mode="outlined"
-          placeholder="Email"
-          style={styles.control}
-          value={value.email}
-          onChangeText={(text) => setValue({ ...value, email: text })}
+      <View>
+        <Controller
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              placeholder="Email"
+              mode="outlined"
+              style={styles.control}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+            />
+          )}
+          name="email"
         />
-        <TextInput
-          mode="outlined"
-          placeholder="Password"
-          style={styles.control}
-          value={value.password}
-          onChangeText={(text) => setValue({ ...value, password: text })}
-          secureTextEntry={true}
+        {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
+        <Controller
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              placeholder="Password"
+              mode="outlined"
+              style={styles.control}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              secureTextEntry={true}
+            />
+          )}
+          name="password"
         />
+        {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
         <Button
+          mode="elevated"
           style={styles.control}
           onPress={() => {
-            void signUp()
+            void handleSubmit(onSubmit)()
           }}
         >
           Sign up
