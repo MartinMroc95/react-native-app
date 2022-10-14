@@ -5,7 +5,7 @@ import { Button, TextInput } from 'react-native-paper'
 import { FirebaseError } from '@firebase/util'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { AuthErrorCodes, createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
 import { signUpValidationScheme, styles } from './constants'
 
 type SignUpFormData = {

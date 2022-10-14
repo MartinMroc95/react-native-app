@@ -9,7 +9,7 @@ dist/
 .expo/
 
 # local env files
-.env.local
+.env
 
 # debug
 npm-debug.*
