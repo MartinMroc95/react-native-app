@@ -10,7 +10,8 @@
     "moduleResolution": "node",
     "noEmit": true,
     "strict": true,
-    "target": "esnext"
+    "target": "esnext",
+    "baseUrl": "src"
   },
   "include": ["next-env.d.ts", "src/**/*.d.ts", "**/*.ts", "**/*.tsx", "**/*.config.js"],
   "exclude": ["node_modules"],
