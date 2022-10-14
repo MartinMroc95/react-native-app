@@ -1,5 +1,8 @@
 {
-  "extends": ["@sudolabs-io/eslint-config-sudolabs/typescript"],
+  "extends": [
+    "@sudolabs-io/eslint-config-sudolabs/typescript",
+    "@sudolabs-io/eslint-config-sudolabs/with/prettier"
+  ],
   "ignorePatterns": [
     "index.js",
     "jest.config.js",
