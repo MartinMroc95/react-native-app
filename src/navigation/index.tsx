@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAuthentication } from '../utils/hooks/useAuthentication'
+import { useAuthentication } from 'utils/hooks/useAuthentication'
 import AuthStack from './AuthStack'
 import UserStack from './UserStack'
 

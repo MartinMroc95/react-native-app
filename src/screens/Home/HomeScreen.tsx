@@ -1,9 +1,9 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button } from 'react-native-paper'
-import { FontAwesome } from '@expo/vector-icons'
+// import { FontAwesome } from '@expo/vector-icons'
 import { getAuth, signOut } from 'firebase/auth'
-import { useAuthentication } from '../../utils/hooks/useAuthentication'
+import { useAuthentication } from 'utils/hooks/useAuthentication'
 
 const styles = StyleSheet.create({
   container: {
@@ -28,36 +28,36 @@ const styles = StyleSheet.create({
   },
 })
 
-const data = [
-  {
-    id: Math.random(),
-    label: 'Podnájom',
-    amount: 350,
-    unit: '€',
-    icon: <FontAwesome name="heartbeat" size={24} color="green" />,
-  },
-  {
-    id: Math.random(),
-    label: 'Podnájom',
-    amount: 350,
-    unit: '€',
-    icon: <FontAwesome name="heartbeat" size={24} color="black" />,
-  },
-  {
-    id: Math.random(),
-    label: 'Podnájom',
-    amount: 350,
-    unit: '€',
-    icon: <FontAwesome name="heartbeat" size={24} color="black" />,
-  },
-  {
-    id: Math.random(),
-    label: 'Podnájom',
-    amount: 350,
-    unit: '€',
-    icon: <FontAwesome name="heartbeat" size={24} color="black" />,
-  },
-]
+// const data = [
+//   {
+//     id: Math.random(),
+//     label: 'Podnájom',
+//     amount: 350,
+//     unit: '€',
+//     icon: <FontAwesome name="heartbeat" size={24} color="green" />,
+//   },
+//   {
+//     id: Math.random(),
+//     label: 'Podnájom',
+//     amount: 350,
+//     unit: '€',
+//     icon: <FontAwesome name="heartbeat" size={24} color="black" />,
+//   },
+//   {
+//     id: Math.random(),
+//     label: 'Podnájom',
+//     amount: 350,
+//     unit: '€',
+//     icon: <FontAwesome name="heartbeat" size={24} color="black" />,
+//   },
+//   {
+//     id: Math.random(),
+//     label: 'Podnájom',
+//     amount: 350,
+//     unit: '€',
+//     icon: <FontAwesome name="heartbeat" size={24} color="black" />,
+//   },
+// ]
 
 const auth = getAuth()
 

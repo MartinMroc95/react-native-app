@@ -7,7 +7,10 @@ module.exports = function (api) {
         'module-resolver',
         {
           alias: {
+            utils: './src/utils',
             screens: './src/screens',
+            navigation: './src/navigation',
+            components: './src/components',
           },
         },
       ],
