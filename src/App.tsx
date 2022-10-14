@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { MD3LightTheme as DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
 import RootNavigation from './navigation'
-import '../firebase'
+import 'database'
 
 const theme = {
   ...DefaultTheme,
