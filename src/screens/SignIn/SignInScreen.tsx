@@ -1,96 +1,119 @@
-import React from 'react'
+import * as React from 'react'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
 import { FirebaseError } from '@firebase/util'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Link } from '@react-navigation/native'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { signInValidationScheme } from './constants'
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: '100%',
+    height: '100%',
     paddingTop: 20,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  controls: {
-    width: 200,
-    height: 60,
-  },
   control: {
+    width: 200,
+    maxHeight: 60,
     marginTop: 10,
   },
   error: {
-    marginTop: 10,
-    padding: 10,
-    color: '#fff',
-    backgroundColor: '#D54826FF',
+    color: 'red',
+  },
+  linkControl: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 10,
   },
 })
 
 const auth = getAuth()
 
+type SignInFormData = {
+  email: string
+  password: string
+}
+
 const SignInScreen: React.FC = () => {
-  const [value, setValue] = React.useState({
-    email: '',
-    password: '',
-    error: '',
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInFormData>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    resolver: yupResolver(signInValidationScheme),
   })
 
-  const signIn = async () => {
-    if (value.email === '' || value.password === '') {
-      setValue({
-        ...value,
-        error: 'Email and password are mandatory.',
-      })
-      return
-    }
-
+  const onSubmit: SubmitHandler<SignInFormData> = async ({ email, password }) => {
     try {
-      await signInWithEmailAndPassword(auth, value.email, value.password)
+      await signInWithEmailAndPassword(auth, email, password)
     } catch (error) {
       if (error instanceof FirebaseError) {
-        const { message } = error
-        setValue({
-          ...value,
-          error: message,
-        })
+        console.log('error', error.message)
+        throw new Error(error.message)
       }
     }
   }
 
   return (
     <View style={styles.container}>
-      <Text>Sign In screen!</Text>
-      {!!value.error && (
-        <View style={styles.error}>
-          <Text>{value.error}</Text>
-        </View>
-      )}
-      <View style={styles.controls}>
-        <TextInput
-          mode="outlined"
-          placeholder="Email"
-          style={styles.control}
-          value={value.email}
-          onChangeText={(text) => setValue({ ...value, email: text })}
-        />
-        <TextInput
-          mode="outlined"
-          placeholder="Password"
-          style={styles.control}
-          value={value.password}
-          onChangeText={(text) => setValue({ ...value, password: text })}
-          secureTextEntry={true}
-        />
-        <Button
-          style={styles.control}
-          onPress={() => {
-            void signIn()
-          }}
-        >
-          Sign in
-        </Button>
+      <Controller
+        control={control}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            placeholder="Email"
+            mode="outlined"
+            style={styles.control}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+        name="email"
+      />
+      {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
+      <Controller
+        control={control}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            placeholder="Password"
+            mode="outlined"
+            style={styles.control}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            secureTextEntry={true}
+          />
+        )}
+        name="password"
+      />
+      {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
+      <Button
+        mode="contained"
+        style={styles.control}
+        onPress={() => {
+          void handleSubmit(onSubmit)()
+        }}
+      >
+        Sign in
+      </Button>
+      <View style={styles.linkControl}>
+        <Text style={{ paddingRight: 5 }}>Not a member?</Text>
+        <Link style={{ color: 'blue' }} to={{ screen: 'Sign Up' }}>
+          Sign Up!
+        </Link>
       </View>
+      <Text style={{ paddingTop: 10, paddingBottom: 10 }}>------ OR ------</Text>
     </View>
   )
 }
