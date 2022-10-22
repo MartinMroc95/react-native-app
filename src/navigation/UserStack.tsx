@@ -1,17 +1,17 @@
 import React from 'react'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import DetailsScreen from 'screens/Details'
 import HomeScreen from 'screens/Home'
 
-const Tab = createBottomTabNavigator()
+const Stack = createNativeStackNavigator()
 
 const UserStack = () => (
   <NavigationContainer>
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Details" component={DetailsScreen} />
-    </Tab.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Details" component={DetailsScreen} />
+    </Stack.Navigator>
   </NavigationContainer>
 )
 
