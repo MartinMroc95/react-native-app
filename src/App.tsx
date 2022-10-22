@@ -1,19 +1,20 @@
 import * as React from 'react'
-import { MD3LightTheme as DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
-import RootNavigation from './navigation'
 import 'database'
+import { AuthProvider } from './context/authProvider'
+import RootNavigation from 'navigation'
+import { NativeBaseProvider } from 'native-base'
+import { DefaultTheme, Provider as ReactNativePaperProvider } from 'react-native-paper'
 
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-  },
+const App = () => {
+  return (
+    <NativeBaseProvider>
+      <ReactNativePaperProvider theme={DefaultTheme}>
+        <AuthProvider>
+          <RootNavigation />
+        </AuthProvider>
+      </ReactNativePaperProvider>
+    </NativeBaseProvider>
+  )
 }
-
-const App = () => (
-  <PaperProvider theme={theme}>
-    <RootNavigation />
-  </PaperProvider>
-)
 
 export default App

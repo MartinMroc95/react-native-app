@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Link } from '@react-navigation/native'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { signInValidationScheme } from './constants'
+import { useAuth } from 'context/authProvider'
 
 const styles = StyleSheet.create({
   container: {
@@ -42,6 +43,8 @@ type SignInFormData = {
 }
 
 const SignInScreen: React.FC = () => {
+  const auth = useAuth()
+
   const {
     control,
     handleSubmit,
@@ -56,7 +59,7 @@ const SignInScreen: React.FC = () => {
 
   const onSubmit: SubmitHandler<SignInFormData> = async ({ email, password }) => {
     try {
-      await signInWithEmailAndPassword(auth, email, password)
+      auth.signIn({ email, password })
     } catch (error) {
       if (error instanceof FirebaseError) {
         console.log('error', error.message)
@@ -113,7 +116,6 @@ const SignInScreen: React.FC = () => {
           Sign Up!
         </Link>
       </View>
-      <Text style={{ paddingTop: 10, paddingBottom: 10 }}>------ OR ------</Text>
     </View>
   )
 }
