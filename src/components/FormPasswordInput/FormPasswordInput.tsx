@@ -1,6 +1,6 @@
+import { useState } from 'react'
 import { MaterialIcons } from '@expo/vector-icons'
 import { FormControl, Icon, Input, Pressable, WarningOutlineIcon } from 'native-base'
-import React from 'react'
 import { Control, Controller } from 'react-hook-form'
 
 interface Props {
@@ -18,7 +18,7 @@ export const FormPasswordInput: React.FC<Props> = ({
   placeholder,
   errorMessage,
 }) => {
-  const [isPasswordShow, setIsPasswordShow] = React.useState(false)
+  const [isPasswordShow, setIsPasswordShow] = useState(false)
   return (
     <FormControl isInvalid={!!errorMessage}>
       <FormControl.Label>{label}</FormControl.Label>
@@ -26,11 +26,15 @@ export const FormPasswordInput: React.FC<Props> = ({
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
           <Input
+            size="md"
             type={isPasswordShow ? 'text' : 'password'}
             placeholder={placeholder}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            InputLeftElement={
+              <Icon as={<MaterialIcons name="vpn-key" />} size={5} ml="2" color="muted.400" />
+            }
             InputRightElement={
               <Pressable onPress={() => setIsPasswordShow((prevState) => !prevState)}>
                 <Icon
