@@ -5,7 +5,7 @@ import { onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from 'f
 type AuthContextData = {
   userData?: User | null
   isLoading: boolean
-  signIn: ({ email, password }: { email: string; password: string }) => Promise<void>
+  signIn: (email?: string, password?: string) => Promise<void>
   signOutUser(): Promise<void>
 }
 
@@ -37,8 +37,10 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
     return unsubscribe
   }, [])
 
-  const signIn = async ({ email, password }: { email: string; password: string }) => {
-    await signInWithEmailAndPassword(auth, email, password)
+  const signIn = async (email?: string, password?: string) => {
+    if (email && password) {
+      await signInWithEmailAndPassword(auth, email, password)
+    }
   }
 
   const signOutUser = async () => {
