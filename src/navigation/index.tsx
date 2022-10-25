@@ -1,12 +1,17 @@
 import React from 'react'
-import { useAuthentication } from 'utils/hooks/useAuthentication'
+import Loading from 'components/Loading'
+import { useAuth } from 'providers/AuthProvider'
 import AuthStack from './AuthStack'
 import UserStack from './UserStack'
 
 const RootNavigation = () => {
-  const { user } = useAuthentication()
+  const { userData, isLoading } = useAuth()
 
-  return user ? <UserStack /> : <AuthStack />
+  if (isLoading) {
+    return <Loading />
+  }
+
+  return userData ? <UserStack /> : <AuthStack />
 }
 
 export default RootNavigation
