@@ -19,10 +19,12 @@ import {
 import { Routes, UnAuthStackParamList } from 'navigation/constants'
 import { useAuth } from 'providers/AuthProvider'
 import { defaultSignInFormValues, signInValidationScheme } from './constants'
+import FormTextInput from 'components/FormTextInput'
+import FormPasswordInput from 'components/FormPasswordInput'
 
 type SignInFormData = {
-  email: string
-  password: string
+  email?: string
+  password?: string
 }
 
 type SignInProps = NativeStackScreenProps<UnAuthStackParamList, Routes.SignIn>
@@ -41,12 +43,11 @@ const SignInScreen: React.FC<SignInProps> = ({ navigation }) => {
 
   const onSubmit: SubmitHandler<SignInFormData> = async ({ email, password }) => {
     try {
-      await auth.signIn({ email, password })
+      await auth.signIn(email, password)
     } catch (error) {
-      if (error instanceof FirebaseError) {
-        console.log('error', error.message)
-        // throw new Error(error.message)
-      }
+      const err = error as FirebaseError
+      console.log('error', err.message)
+      // throw new Error(error.message)
     }
   }
 
@@ -55,70 +56,29 @@ const SignInScreen: React.FC<SignInProps> = ({ navigation }) => {
   return (
     <Center bgColor="white" flex={1} w="100%">
       <Box safeArea p="2" py="8" w="90%" maxW="290">
-        <Heading
-          size="lg"
-          fontWeight="600"
-          color="coolGray.800"
-          _dark={{
-            color: 'warmGray.50',
-          }}
-        >
+        <Heading size="lg" fontWeight="600" color="coolGray.800">
           Welcome
         </Heading>
-        <Heading
-          mt="1"
-          _dark={{
-            color: 'warmGray.200',
-          }}
-          color="coolGray.600"
-          fontWeight="medium"
-          size="xs"
-        >
+        <Heading mt="1" color="coolGray.600" fontWeight="medium" size="xs">
           Sign in to continue!
         </Heading>
         <VStack space={2} mt="5">
-          <FormControl isInvalid={!!errors.email}>
-            <FormControl.Label>Email</FormControl.Label>
-            <Controller
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  type="text"
-                  placeholder="Email"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                />
-              )}
-              name="email"
-            />
-            <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-              {errors.email && errors.email.message}
-            </FormControl.ErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={!!errors.password}>
-            <FormControl.Label>Password</FormControl.Label>
-            <Controller
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  type="password"
-                  placeholder="Password"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  secureTextEntry={true}
-                />
-              )}
-              name="password"
-            />
-            <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-              {errors.password && errors.password.message}
-            </FormControl.ErrorMessage>
-          </FormControl>
+          <FormTextInput
+            control={control}
+            name="email"
+            label="Email"
+            placeholder="Enter email"
+            errorMessage={errors.email && errors.email.message}
+          />
+          <FormPasswordInput
+            control={control}
+            name="password"
+            label="Password"
+            placeholder="Enter password"
+            errorMessage={errors.password && errors.password.message}
+          />
           <Link
             _text={{
-              fontSize: 'xs',
               fontWeight: '500',
               color: 'indigo.500',
             }}
@@ -128,7 +88,7 @@ const SignInScreen: React.FC<SignInProps> = ({ navigation }) => {
               navigation.navigate(Routes.SignUp)
             }}
           >
-            Forget Password?
+            Forgot Password?
           </Link>
           <Button
             mt="2"
@@ -140,15 +100,7 @@ const SignInScreen: React.FC<SignInProps> = ({ navigation }) => {
             Sign in
           </Button>
           <HStack mt="6" justifyContent="center">
-            <Text
-              fontSize="sm"
-              color="coolGray.600"
-              _dark={{
-                color: 'warmGray.200',
-              }}
-            >
-              I'm a new user.{' '}
-            </Text>
+            <Text color="coolGray.600">I'm a new user. </Text>
             <Link
               _text={{
                 color: 'indigo.500',
