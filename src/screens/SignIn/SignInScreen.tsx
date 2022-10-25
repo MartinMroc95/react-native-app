@@ -1,48 +1,33 @@
 import * as React from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { StyleSheet, Text, View } from 'react-native'
-import { Button, TextInput } from 'react-native-paper'
 import { FirebaseError } from '@firebase/util'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Link } from '@react-navigation/native'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
-import { signInValidationScheme } from './constants'
-import { useAuth } from 'context/authProvider'
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    paddingTop: 20,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  control: {
-    width: 200,
-    maxHeight: 60,
-    marginTop: 10,
-  },
-  error: {
-    color: 'red',
-  },
-  linkControl: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 10,
-  },
-})
-
-const auth = getAuth()
+import type { NativeStackScreenProps } from '@react-navigation/native-stack'
+import {
+  Box,
+  Button,
+  Center,
+  FormControl,
+  Heading,
+  HStack,
+  Input,
+  Link,
+  Text,
+  VStack,
+  WarningOutlineIcon,
+} from 'native-base'
+import { Routes, UnAuthStackParamList } from 'navigation/constants'
+import { useAuth } from 'providers/AuthProvider'
+import { defaultSignInFormValues, signInValidationScheme } from './constants'
 
 type SignInFormData = {
   email: string
   password: string
 }
 
-const SignInScreen: React.FC = () => {
+type SignInProps = NativeStackScreenProps<UnAuthStackParamList, Routes.SignIn>
+
+const SignInScreen: React.FC<SignInProps> = ({ navigation }) => {
   const auth = useAuth()
 
   const {
@@ -50,73 +35,136 @@ const SignInScreen: React.FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<SignInFormData>({
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+    defaultValues: defaultSignInFormValues,
     resolver: yupResolver(signInValidationScheme),
   })
 
   const onSubmit: SubmitHandler<SignInFormData> = async ({ email, password }) => {
     try {
-      auth.signIn({ email, password })
+      await auth.signIn({ email, password })
     } catch (error) {
       if (error instanceof FirebaseError) {
         console.log('error', error.message)
-        throw new Error(error.message)
+        // throw new Error(error.message)
       }
     }
   }
 
+  console.log('errors', errors)
+
   return (
-    <View style={styles.container}>
-      <Controller
-        control={control}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            placeholder="Email"
-            mode="outlined"
-            style={styles.control}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-        name="email"
-      />
-      {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
-      <Controller
-        control={control}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            placeholder="Password"
-            mode="outlined"
-            style={styles.control}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            secureTextEntry={true}
-          />
-        )}
-        name="password"
-      />
-      {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
-      <Button
-        mode="contained"
-        style={styles.control}
-        onPress={() => {
-          void handleSubmit(onSubmit)()
-        }}
-      >
-        Sign in
-      </Button>
-      <View style={styles.linkControl}>
-        <Text style={{ paddingRight: 5 }}>Not a member?</Text>
-        <Link style={{ color: 'blue' }} to={{ screen: 'Sign Up' }}>
-          Sign Up!
-        </Link>
-      </View>
-    </View>
+    <Center bgColor="white" flex={1} w="100%">
+      <Box safeArea p="2" py="8" w="90%" maxW="290">
+        <Heading
+          size="lg"
+          fontWeight="600"
+          color="coolGray.800"
+          _dark={{
+            color: 'warmGray.50',
+          }}
+        >
+          Welcome
+        </Heading>
+        <Heading
+          mt="1"
+          _dark={{
+            color: 'warmGray.200',
+          }}
+          color="coolGray.600"
+          fontWeight="medium"
+          size="xs"
+        >
+          Sign in to continue!
+        </Heading>
+        <VStack space={2} mt="5">
+          <FormControl isInvalid={!!errors.email}>
+            <FormControl.Label>Email</FormControl.Label>
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  type="text"
+                  placeholder="Email"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
+              name="email"
+            />
+            <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+              {errors.email && errors.email.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+          <FormControl isInvalid={!!errors.password}>
+            <FormControl.Label>Password</FormControl.Label>
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry={true}
+                />
+              )}
+              name="password"
+            />
+            <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+              {errors.password && errors.password.message}
+            </FormControl.ErrorMessage>
+          </FormControl>
+          <Link
+            _text={{
+              fontSize: 'xs',
+              fontWeight: '500',
+              color: 'indigo.500',
+            }}
+            alignSelf="flex-end"
+            mt="1"
+            onPress={() => {
+              navigation.navigate(Routes.SignUp)
+            }}
+          >
+            Forget Password?
+          </Link>
+          <Button
+            mt="2"
+            colorScheme="indigo"
+            onPress={() => {
+              void handleSubmit(onSubmit)()
+            }}
+          >
+            Sign in
+          </Button>
+          <HStack mt="6" justifyContent="center">
+            <Text
+              fontSize="sm"
+              color="coolGray.600"
+              _dark={{
+                color: 'warmGray.200',
+              }}
+            >
+              I'm a new user.{' '}
+            </Text>
+            <Link
+              _text={{
+                color: 'indigo.500',
+                fontWeight: 'medium',
+                fontSize: 'sm',
+              }}
+              onPress={() => {
+                navigation.navigate(Routes.SignUp)
+              }}
+            >
+              Sign Up
+            </Link>
+          </HStack>
+        </VStack>
+      </Box>
+    </Center>
   )
 }
 

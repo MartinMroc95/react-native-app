@@ -9,3 +9,8 @@ export const signInValidationScheme = yup
     password: yup.string().required('Password is a required field.'),
   })
   .required()
+
+export const defaultSignInFormValues = {
+  email: '',
+  password: '',
+}
