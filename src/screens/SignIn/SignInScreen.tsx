@@ -1,36 +1,29 @@
 import * as React from 'react'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { FirebaseError } from '@firebase/util'
 import { yupResolver } from '@hookform/resolvers/yup'
-import type { NativeStackScreenProps } from '@react-navigation/native-stack'
-import {
-  Box,
-  Button,
-  Center,
-  FormControl,
-  Heading,
-  HStack,
-  Input,
-  Link,
-  Text,
-  VStack,
-  WarningOutlineIcon,
-} from 'native-base'
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { Box, Button, Center, Heading, HStack, Link, Text, useToast, VStack } from 'native-base'
 import { Routes, UnAuthStackParamList } from 'navigation/constants'
+import FormPasswordInput from 'components/FormPasswordInput'
+import FormTextInput from 'components/FormTextInput'
 import { useAuth } from 'providers/AuthProvider'
 import { defaultSignInFormValues, signInValidationScheme } from './constants'
-import FormTextInput from 'components/FormTextInput'
-import FormPasswordInput from 'components/FormPasswordInput'
 
 type SignInFormData = {
   email?: string
   password?: string
 }
 
-type SignInProps = NativeStackScreenProps<UnAuthStackParamList, Routes.SignIn>
+type SignInScreenNavigationProps = NativeStackNavigationProp<UnAuthStackParamList, Routes.SignIn>
 
-const SignInScreen: React.FC<SignInProps> = ({ navigation }) => {
+type Props = {
+  navigation: SignInScreenNavigationProps
+}
+
+const SignInScreen: React.FC<Props> = ({ navigation }) => {
   const auth = useAuth()
+  const toast = useToast()
 
   const {
     control,
@@ -46,12 +39,17 @@ const SignInScreen: React.FC<SignInProps> = ({ navigation }) => {
       await auth.signIn(email, password)
     } catch (error) {
       const err = error as FirebaseError
-      console.log('error', err.message)
-      // throw new Error(error.message)
+      toast.show({
+        render: () => (
+          <Box alignItems="center" bg="error.500" p="2" rounded="sm">
+            <Text maxWidth="xs" color="white">
+              {err.message}
+            </Text>
+          </Box>
+        ),
+      })
     }
   }
-
-  console.log('errors', errors)
 
   return (
     <Center bgColor="white" flex={1} w="100%">
@@ -78,12 +76,12 @@ const SignInScreen: React.FC<SignInProps> = ({ navigation }) => {
             errorMessage={errors.password && errors.password.message}
           />
           <Link
+            mt="1"
             _text={{
-              fontWeight: '500',
-              color: 'indigo.500',
+              fontWeight: '600',
+              color: 'blue.600',
             }}
             alignSelf="flex-end"
-            mt="1"
             onPress={() => {
               navigation.navigate(Routes.SignUp)
             }}
@@ -92,7 +90,6 @@ const SignInScreen: React.FC<SignInProps> = ({ navigation }) => {
           </Link>
           <Button
             mt="2"
-            colorScheme="indigo"
             onPress={() => {
               void handleSubmit(onSubmit)()
             }}
@@ -100,11 +97,11 @@ const SignInScreen: React.FC<SignInProps> = ({ navigation }) => {
             Sign in
           </Button>
           <HStack mt="6" justifyContent="center">
-            <Text color="coolGray.600">I'm a new user. </Text>
+            <Text color="coolGray.600">I am a new user.</Text>
             <Link
               _text={{
-                color: 'indigo.500',
-                fontWeight: 'medium',
+                color: 'blue.600',
+                fontWeight: '600',
                 fontSize: 'sm',
               }}
               onPress={() => {
