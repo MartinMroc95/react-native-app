@@ -1,23 +1,24 @@
 import React from 'react'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { FirebaseError } from '@firebase/util'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
 import {
   Box,
   Button,
   Center,
-  FormControl,
   Heading,
-  Input,
+  HStack,
+  Text,
+  useToast,
   VStack,
   WarningOutlineIcon,
 } from 'native-base'
 import { Routes, UnAuthStackParamList } from 'navigation/constants'
-import { defaultSignUpFormValues, signUpValidationScheme } from './constants'
-import FormTextInput from 'components/FormTextInput'
 import FormPasswordInput from 'components/FormPasswordInput'
+import FormTextInput from 'components/FormTextInput'
+import { defaultSignUpFormValues, signUpValidationScheme } from './constants'
 
 type SignUpFormData = {
   email?: string
@@ -25,10 +26,15 @@ type SignUpFormData = {
   confirmPassword?: string
 }
 
-type SignUpProps = NativeStackScreenProps<UnAuthStackParamList, Routes.SignUp>
+type SignUpScreenNavigationProps = NativeStackNavigationProp<UnAuthStackParamList, Routes.SignUp>
 
-const SignUpScreen: React.FC<SignUpProps> = ({ navigation }) => {
+type Props = {
+  navigation: SignUpScreenNavigationProps
+}
+
+const SignUpScreen: React.FC<Props> = ({ navigation }) => {
   const auth = getAuth()
+  const toast = useToast()
 
   const {
     control,
@@ -46,10 +52,15 @@ const SignUpScreen: React.FC<SignUpProps> = ({ navigation }) => {
         navigation.navigate(Routes.SignIn)
       }
     } catch (error) {
-      if (error instanceof FirebaseError) {
-        console.log('error', error.message)
-        // throw new Error(error.message)
-      }
+      const err = error as FirebaseError
+      toast.show({
+        render: () => (
+          <HStack space="2" alignItems="center" bg="error.500" p="2" rounded="sm">
+            <WarningOutlineIcon color="white" size="xs" />
+            <Text color="white">{err.message}</Text>
+          </HStack>
+        ),
+      })
     }
   }
 
@@ -100,11 +111,10 @@ const SignUpScreen: React.FC<SignUpProps> = ({ navigation }) => {
             errorMessage={errors.confirmPassword && errors.confirmPassword.message}
           />
           <Button
+            mt="4"
             onPress={() => {
               void handleSubmit(onSubmit)()
             }}
-            mt="4"
-            colorScheme="indigo"
           >
             Sign up
           </Button>
