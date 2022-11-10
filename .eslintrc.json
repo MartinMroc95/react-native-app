@@ -1,7 +1,7 @@
 {
   "extends": [
-    "@sudolabs-io/eslint-config-sudolabs/typescript",
-    "@sudolabs-io/eslint-config-sudolabs/with/prettier"
+    "@sudolabs-io/eslint-config-sudolabs/typescript"
+    // "@sudolabs-io/eslint-config-sudolabs/with/prettier"
   ],
   "ignorePatterns": [
     "index.js",
