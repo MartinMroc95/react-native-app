@@ -1,3 +1,3 @@
-import { ForgotPasswordScreen } from './ForgotPasswordScreen'
+import ForgotPasswordScreen from './ForgotPasswordScreen'
 
 export default ForgotPasswordScreen
