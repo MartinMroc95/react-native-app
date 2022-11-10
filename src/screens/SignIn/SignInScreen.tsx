@@ -83,7 +83,7 @@ const SignInScreen: React.FC<Props> = ({ navigation }) => {
             }}
             alignSelf="flex-end"
             onPress={() => {
-              navigation.navigate(Routes.SignUp)
+              navigation.navigate(Routes.ForgotPassword)
             }}
           >
             Forgot Password?
