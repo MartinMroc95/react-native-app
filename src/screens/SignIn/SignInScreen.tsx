@@ -80,6 +80,7 @@ const SignInScreen: React.FC<Props> = ({ navigation }) => {
             _text={{
               fontWeight: '600',
               color: 'blue.600',
+              fontSize: 'sm',
             }}
             alignSelf="flex-end"
             onPress={() => {
@@ -94,9 +95,9 @@ const SignInScreen: React.FC<Props> = ({ navigation }) => {
               void handleSubmit(onSubmit)()
             }}
           >
-            Sign in
+            Sign In
           </Button>
-          <HStack mt="6" justifyContent="center">
+          <HStack mt="6" justifyContent="center" space={'2px'}>
             <Text color="coolGray.600">I am a new user.</Text>
             <Link
               _text={{
