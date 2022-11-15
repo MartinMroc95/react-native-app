@@ -6,10 +6,10 @@ type AuthContextData = {
   userData?: User | null
   isLoading: boolean
   signIn: (email?: string, password?: string) => Promise<void>
-  signOutUser: () => Promise<void>
+  signOutUser(): Promise<void>
 }
 
-interface Props {
+type Props = {
   children: ReactNode
 }
 

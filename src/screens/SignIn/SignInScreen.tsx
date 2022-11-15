@@ -80,11 +80,10 @@ const SignInScreen: React.FC<Props> = ({ navigation }) => {
             _text={{
               fontWeight: '600',
               color: 'blue.600',
-              fontSize: 'sm',
             }}
             alignSelf="flex-end"
             onPress={() => {
-              navigation.navigate(Routes.ForgotPassword)
+              navigation.navigate(Routes.SignUp)
             }}
           >
             Forgot Password?
@@ -95,9 +94,9 @@ const SignInScreen: React.FC<Props> = ({ navigation }) => {
               void handleSubmit(onSubmit)()
             }}
           >
-            Sign In
+            Sign in
           </Button>
-          <HStack mt="6" justifyContent="center" space={'2px'}>
+          <HStack mt="6" justifyContent="center">
             <Text color="coolGray.600">I am a new user.</Text>
             <Link
               _text={{

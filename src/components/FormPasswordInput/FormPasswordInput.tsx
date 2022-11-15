@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Control, Controller } from 'react-hook-form'
 import { MaterialIcons } from '@expo/vector-icons'
 import { FormControl, Icon, Input, Pressable, WarningOutlineIcon } from 'native-base'
+import { Control, Controller } from 'react-hook-form'
 
 interface Props {
   name: string
@@ -33,20 +33,14 @@ export const FormPasswordInput: React.FC<Props> = ({
             onChangeText={onChange}
             value={value}
             InputLeftElement={
-              <Icon as={<MaterialIcons name="vpn-key" />} size={5} mx="2" color="muted.400" />
+              <Icon as={<MaterialIcons name="vpn-key" />} size={5} ml="2" color="muted.400" />
             }
             InputRightElement={
-              <Pressable
-                h="34px"
-                justifyContent="center"
-                onPress={() => {
-                  setIsPasswordShow((prevState) => !prevState)
-                }}
-              >
+              <Pressable onPress={() => setIsPasswordShow((prevState) => !prevState)}>
                 <Icon
                   as={<MaterialIcons name={isPasswordShow ? 'visibility' : 'visibility-off'} />}
                   size={5}
-                  mx="2"
+                  mr="2"
                   color="muted.400"
                 />
               </Pressable>
