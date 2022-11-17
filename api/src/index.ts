@@ -1,15 +1,31 @@
-import { ApolloServer } from 'apollo-server'
+import { ApolloServer } from '@apollo/server'
+import { startStandaloneServer } from '@apollo/server/standalone'
+
+const books = [
+  {
+    title: 'The Awakening',
+    author: 'Kate Chopin',
+  },
+  {
+    title: 'City of Glass',
+    author: 'Paul Auster',
+  },
+]
 
 const typeDefs = `
+  type Book {
+    title: String
+    author: String
+  }
+
   type Query {
-    info: String!
-    hello(name: String): String
+    books: [Book]
   }
 `
 
 const resolvers = {
   Query: {
-    hello: (_: any, args: { name: string }) => `Hello ${args.name || 'World!'}`,
+    books: () => books,
   },
 }
 
@@ -18,8 +34,6 @@ const server = new ApolloServer({
   resolvers,
 })
 
-const port = 5000
+const { url } = await startStandaloneServer(server)
 
-server.listen({ port }).then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`)
-})
+console.log(`🚀 Server ready at ${url}`)
