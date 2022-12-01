@@ -14,5 +14,6 @@ coverage
 
 # build
 build
+dist
 
 *.pem
