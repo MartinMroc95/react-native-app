@@ -1,22 +1,30 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.ts",
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "compile": "tsc",
-    "dev": "npm run compile && node ./dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "ts-node-dev --watch --respawn --transpile-only ./src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate:graphql-types": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@apollo/server": "^4.1.1",
+    "@graphql-tools/load-files": "^6.6.1",
     "@types/node": "^18.11.9",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
+    "express": "^4.18.2",
     "graphql": "^16.6.0",
-    "nexus": "^1.1.0",
+    "http": "^0.0.1-security",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.9.3"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "2.15.0",
+    "@types/cors": "^2.8.12",
+    "@graphql-codegen/typescript": "2.8.2",
+    "@graphql-codegen/typescript-resolvers": "2.7.7"
   }
 }
