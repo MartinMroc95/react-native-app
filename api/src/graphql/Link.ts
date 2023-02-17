@@ -1,5 +1,4 @@
 import { extendType, nonNull, objectType, stringArg } from 'nexus'
-import { NexusGenObjects } from '../../nexus-typegen'
 
 export const Link = objectType({
   name: 'Link',
@@ -7,21 +6,14 @@ export const Link = objectType({
     t.nonNull.int('id')
     t.nonNull.string('description')
     t.nonNull.string('url')
+    t.field('postedBy', {
+      type: 'User',
+      resolve(parent, args, context) {
+        return context.prisma.link.findUnique({ where: { id: parent.id } }).postedBy()
+      },
+    })
   },
 })
-
-const links: NexusGenObjects['Link'][] = [
-  {
-    id: 1,
-    url: 'www.howtographql.com',
-    description: 'Fullstack tutorial for GraphQL',
-  },
-  {
-    id: 2,
-    url: 'graphql.org',
-    description: 'GraphQL official website',
-  },
-]
 
 export const LinkQuery = extendType({
   type: 'Query',
@@ -29,36 +21,38 @@ export const LinkQuery = extendType({
     t.nonNull.list.nonNull.field('feed', {
       type: 'Link',
       resolve(parent, args, context, info) {
-        return links
+        return context.prisma.link.findMany()
       },
     })
   },
 })
 
 export const LinkMutation = extendType({
-  // 1
   type: 'Mutation',
   definition(t) {
     t.nonNull.field('post', {
-      // 2
       type: 'Link',
       args: {
-        // 3
         description: nonNull(stringArg()),
         url: nonNull(stringArg()),
       },
-
       resolve(parent, args, context) {
-        const { description, url } = args // 4
+        const { description, url } = args
+        const { userId } = context
 
-        let idCount = links.length + 1 // 5
-        const link = {
-          id: idCount,
-          description: description,
-          url: url,
+        if (!userId) {
+          throw new Error('Cannot post without logging in.')
         }
-        links.push(link)
-        return link
+
+        const newLink = context.prisma.link.create({
+          data: {
+            description,
+            url,
+            postedBy: { connect: { id: userId } },
+          },
+        })
+
+        return newLink
       },
     })
   },
